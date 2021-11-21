@@ -6,7 +6,7 @@ frameWidth = 640
 frameHeight = 480
 
 #inicjalizacja kamerki
-cap = cv.VideoCapture(1)
+cap = cv.VideoCapture(0)
 cap.set(3, frameWidth)
 cap.set(4, frameHeight)
 
@@ -53,9 +53,11 @@ def stackImages(scale,imgArray):
         ver = hor
     return ver
 
+
+
 # funkcja do znajdywania oraz rysowania konturów na obrazie
 def getContours(img, imgContour):
-
+    i = 0    
     contours, hierarchy = cv.findContours(img, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_NONE)
     
 
@@ -72,6 +74,12 @@ def getContours(img, imgContour):
 
             cv.putText(imgContour, "Points:" + str(len(approx)), (x + w + 20, y + 20), cv.FONT_HERSHEY_COMPLEX, .7, (0,255,0), 2)
             cv.putText(imgContour, "Area: " + str(int(area)), (x + w + 20, y + 45), cv.FONT_HERSHEY_COMPLEX, 0.7, (0,255,0), 2)
+
+            # Wycinanie regionu zainteresowania 
+            ROI = imgContour[y:y+h,x:x+w]
+            ROIresized = cv.resize(ROI, (100,100))
+            cv.imwrite("ROI{0}.png".format(i), ROIresized)
+            i = i + 1
 
 #główna pętla w której dzieje się przetwarzanie obrazu
 while True:
